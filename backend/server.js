@@ -66,6 +66,64 @@ function limpiarRespuesta(texto) {
     .trim();
 }
 
+function normalizarTexto(texto) {
+  return String(texto || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function esTemaDeCocina(mensaje) {
+  const texto = normalizarTexto(mensaje);
+  const palabrasCocina = [
+    "receta",
+    "cocina",
+    "cocinar",
+    "comida",
+    "bebida",
+    "preparar",
+    "ingrediente",
+    "horno",
+    "sarten",
+    "olla",
+    "freir",
+    "hervir",
+    "asar",
+    "hornear",
+    "licuar",
+    "batir",
+    "mezclar",
+    "postre",
+    "desayuno",
+    "cena",
+    "almuerzo",
+    "sopa",
+    "ensalada",
+    "pollo",
+    "carne",
+    "pescado",
+    "arroz",
+    "pasta",
+    "huevo",
+    "verdura",
+    "fruta",
+    "salsa",
+    "taco",
+    "mexicana",
+    "vegana",
+    "saludable",
+    "coctel",
+    "jugo",
+    "agua",
+    "cafe",
+    "te",
+    "malteada",
+    "smoothie",
+  ];
+
+  return palabrasCocina.some((palabra) => texto.includes(palabra));
+}
+
 app.post("/api/chefia", async (req, res) => {
   try {
     const { mensaje } = req.body;
@@ -74,12 +132,20 @@ app.post("/api/chefia", async (req, res) => {
       return res.status(400).json({ error: "No se recibió mensaje." });
     }
 
+    if (!esTemaDeCocina(mensaje)) {
+      return res.json({
+        respuesta: "Solo puedo responder sobre cocina, recetas, comida y bebidas.",
+      });
+    }
+
     historial.push(`Usuario: ${mensaje}`);
 
     const prompt = `
 Responde como una guía de cocina por voz.
 
 Reglas:
+- Responde solo sobre cocina, recetas, comida y bebidas.
+- Si el usuario pide otro tema, di: "Solo puedo responder sobre cocina, recetas, comida y bebidas."
 - Responde corto.
 - Usa máximo 2 frases.
 - Haz una sola pregunta por turno.
