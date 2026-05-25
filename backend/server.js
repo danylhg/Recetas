@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import axios from "axios";
 import fs from "fs";
+import http from "http";
 import https from "https";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -13,6 +14,7 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000;
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const SSL_PFX_PATH =
   process.env.SSL_PFX_PATH || path.join(__dirname, "certs", "localhost.pfx");
 const SSL_PFX_PASSPHRASE = process.env.SSL_PFX_PASSPHRASE || "local-dev";
@@ -47,7 +49,7 @@ app.post("/api/chefia", async (req, res) => {
 Eres una asistente de cocina por voz.
 
 Reglas:
-- Responde corto. 
+- Responde corto.
 - Usa máximo 2 frases.
 - Haz una sola pregunta por turno.
 - No des toda la receta de golpe.
@@ -61,7 +63,7 @@ ${historial.join("\n")}
 `;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite",
+      model: process.env.GEMINI_MODEL || "gemini-2.5-flash-lite",
       contents: prompt,
     });
 
@@ -146,26 +148,40 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(FRONTEND_PATH, "index.html"));
 });
 
-if (
-  !fs.existsSync(SSL_PFX_PATH) &&
-  (!fs.existsSync(SSL_KEY_PATH) || !fs.existsSync(SSL_CERT_PATH))
-) {
-  console.error(
-    "Faltan certificados HTTPS. Crea backend/certs/localhost.pfx o backend/certs/localhost-key.pem y backend/certs/localhost-cert.pem."
-  );
-  process.exit(1);
+function startProductionServer() {
+  http.createServer(app).listen(PORT, "0.0.0.0", () => {
+    console.log(`Servidor activo en puerto ${PORT}`);
+  });
 }
 
-const httpsOptions = fs.existsSync(SSL_PFX_PATH)
-  ? {
-      pfx: fs.readFileSync(SSL_PFX_PATH),
-      passphrase: SSL_PFX_PASSPHRASE,
-    }
-  : {
-      key: fs.readFileSync(SSL_KEY_PATH),
-      cert: fs.readFileSync(SSL_CERT_PATH),
-    };
+function startLocalServer() {
+  if (
+    !fs.existsSync(SSL_PFX_PATH) &&
+    (!fs.existsSync(SSL_KEY_PATH) || !fs.existsSync(SSL_CERT_PATH))
+  ) {
+    console.error(
+      "Faltan certificados HTTPS. Crea backend/certs/localhost.pfx o backend/certs/localhost-key.pem y backend/certs/localhost-cert.pem."
+    );
+    process.exit(1);
+  }
 
-https.createServer(httpsOptions, app).listen(PORT, () => {
-  console.log(`Servidor activo en https://localhost:${PORT}`);
-});
+  const httpsOptions = fs.existsSync(SSL_PFX_PATH)
+    ? {
+        pfx: fs.readFileSync(SSL_PFX_PATH),
+        passphrase: SSL_PFX_PASSPHRASE,
+      }
+    : {
+        key: fs.readFileSync(SSL_KEY_PATH),
+        cert: fs.readFileSync(SSL_CERT_PATH),
+      };
+
+  https.createServer(httpsOptions, app).listen(PORT, () => {
+    console.log(`Servidor activo en https://localhost:${PORT}`);
+  });
+}
+
+if (IS_PRODUCTION) {
+  startProductionServer();
+} else {
+  startLocalServer();
+}

@@ -3,8 +3,8 @@ const textoUsuario = document.getElementById("textoUsuario");
 const respuestaIA = document.getElementById("respuestaIA");
 const app = document.querySelector(".app");
 
-const API_CHAT = "https://localhost:3000/api/chefia";
-const API_VOZ = "https://localhost:3000/api/voz";
+const API_CHAT = "/api/chefia";
+const API_VOZ = "/api/voz";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
