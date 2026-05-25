@@ -75,6 +75,28 @@ function normalizarTexto(texto) {
 
 function esTemaDeCocina(mensaje) {
   const texto = normalizarTexto(mensaje);
+  const temasFueraDeCocina = [
+    "casa",
+    "construir",
+    "cemento",
+    "ladrillo",
+    "medicina",
+    "medicamento",
+    "pastilla",
+    "inyeccion",
+    "enfermedad",
+    "doctor",
+    "abogado",
+    "demanda",
+    "programar",
+    "codigo",
+    "matematicas",
+    "tarea",
+    "historia",
+    "politica",
+    "finanzas",
+    "dinero",
+  ];
   const palabrasCocina = [
     "receta",
     "cocina",
@@ -119,9 +141,87 @@ function esTemaDeCocina(mensaje) {
     "te",
     "malteada",
     "smoothie",
+    "enchilada",
+    "enchiladas",
+    "pozole",
+    "mole",
+    "tamales",
+    "quesadilla",
+    "quesadillas",
+    "tostada",
+    "tostadas",
+    "chilaquiles",
+    "flautas",
+    "sopes",
+    "gorditas",
+    "tortilla",
+    "tortillas",
+    "frijoles",
+    "guacamole",
+    "caldo",
+    "birria",
+    "barbacoa",
+    "hamburguesa",
+    "pizza",
+    "sandwich",
+    "hot cakes",
+    "hotcakes",
+    "licuado",
+    "atole",
+    "chocolate",
+    "pan",
+    "pastel",
+    "galletas",
+    "helado",
+    "limonada",
+    "naranjada",
+    "coctel",
+    "cocktail",
+    "queso",
+    "crema",
+    "leche",
+    "mantequilla",
+    "aceite",
+    "sal",
+    "azucar",
+    "harina",
+    "masa",
+    "jitomate",
+    "tomate",
+    "cebolla",
+    "chile",
+    "aguacate",
+    "papas",
+    "papa",
+    "zanahoria",
+    "platano",
+    "manzana",
+  ];
+  const intencionesCocina = [
+    "que ocupo",
+    "que necesito",
+    "como hago",
+    "como preparar",
+    "como preparo",
+    "voy a preparar",
+    "quiero preparar",
+    "quiero hacer",
+    "para hacer",
+    "para preparar",
+    "se cocina",
+    "se prepara",
+    "cuanto tiempo",
+    "a que temperatura",
   ];
 
-  return palabrasCocina.some((palabra) => texto.includes(palabra));
+  const tieneCocina = palabrasCocina.some((palabra) => texto.includes(palabra));
+  const tieneIntencion = intencionesCocina.some((frase) => texto.includes(frase));
+  const tieneFuera = temasFueraDeCocina.some((palabra) => texto.includes(palabra));
+
+  if (tieneCocina) return true;
+  if (tieneIntencion && !tieneFuera) return true;
+
+  return false;
 }
 
 app.post("/api/chefia", async (req, res) => {
