@@ -96,7 +96,7 @@ ${historial.join("\n")}
 
     const respuesta = limpiarRespuesta(await generarRespuesta(prompt));
 
-    historial.push(`Respuesta: ${respuesta}`);
+    historial.push(respuesta);
 
     res.json({ respuesta });
   } catch (error) {
