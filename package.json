@@ -4,10 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm install --prefix backend",
-    "start": "npm start --prefix backend"
+    "build": "echo \"No build step required\"",
+    "start": "node backend/server.js"
   },
   "engines": {
-    "node": ">=20"
+    "node": "22.x"
+  },
+  "dependencies": {
+    "@google/genai": "^1.50.1",
+    "axios": "^1.15.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
   }
 }
