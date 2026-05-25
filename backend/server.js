@@ -60,6 +60,12 @@ async function generarRespuesta(prompt) {
   throw ultimoError;
 }
 
+function limpiarRespuesta(texto) {
+  return String(texto || "")
+    .replace(/^\s*(asistente|chefia|chef|respuesta)\s*:\s*/i, "")
+    .trim();
+}
+
 app.post("/api/chefia", async (req, res) => {
   try {
     const { mensaje } = req.body;
@@ -71,12 +77,13 @@ app.post("/api/chefia", async (req, res) => {
     historial.push(`Usuario: ${mensaje}`);
 
     const prompt = `
-Eres una asistente de cocina por voz.
+Responde como una guía de cocina por voz.
 
 Reglas:
 - Responde corto.
 - Usa máximo 2 frases.
 - Haz una sola pregunta por turno.
+- No empieces tu respuesta con nombres, etiquetas ni prefijos.
 - No des toda la receta de golpe.
 - Primero confirma ingredientes.
 - Después guía paso a paso.
@@ -87,9 +94,9 @@ Conversación:
 ${historial.join("\n")}
 `;
 
-    const respuesta = await generarRespuesta(prompt);
+    const respuesta = limpiarRespuesta(await generarRespuesta(prompt));
 
-    historial.push(`Asistente: ${respuesta}`);
+    historial.push(`Respuesta: ${respuesta}`);
 
     res.json({ respuesta });
   } catch (error) {

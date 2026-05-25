@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Asistente de Recetas</title>
+    <title>Recetas por Voz</title>
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" href="favicon.png" />
     <link rel="stylesheet" href="styles.css" />
@@ -15,12 +15,12 @@
     <main class="app">
         <section class="hero">
             <div class="icon">👨‍🍳</div>
-            <h1>Asistente <span>Voz</span></h1>
-            <p>Tu asistente inteligente de recetas por voz</p>
-            <div class="agent-status" aria-label="Estados del asistente">
+            <h1>Recetas <span>Voz</span></h1>
+            <p>Pide una receta y recibe una respuesta paso a paso</p>
+            <div class="agent-status" aria-label="Estados de la conversación">
                 <span>Escucha</span>
                 <span>Piensa</span>
-                <span>Cocina la respuesta</span>
+                <span>Responde</span>
             </div>
         </section>
 
@@ -34,7 +34,7 @@
 
             <div class="voice-card">
                 <div class="onda"></div>
-                <button id="btnHablar" class="mic-btn" aria-label="Hablar con el asistente">🎙️</button>
+                <button id="btnHablar" class="mic-btn" aria-label="Hablar">🎙️</button>
                 <button id="btnPausar" class="pause-btn" type="button">Pausar</button>
                 <h2>Hablar</h2>
                 <p>Presiona y pide una receta</p>
@@ -46,7 +46,7 @@
             </div>
 
             <div class="card">
-                <h2 class="chef">👨‍🍳 Asistente:</h2>
+                <h2 class="chef">👨‍🍳 Respuesta:</h2>
                 <div class="box" id="respuestaIA">
                     La receta aparecerá aquí...
                 </div>
