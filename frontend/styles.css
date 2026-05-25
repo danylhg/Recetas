@@ -2,31 +2,67 @@
     box-sizing: border-box;
 }
 
+:root {
+    --bg: #090909;
+    --panel: rgba(20, 23, 32, 0.82);
+    --panel-strong: rgba(12, 14, 20, 0.9);
+    --line: rgba(255, 255, 255, 0.12);
+    --text: #ffffff;
+    --muted: #cfcfcf;
+    --orange: #ff8a19;
+    --gold: #ffd36b;
+    --green: #4cff75;
+    --violet: #a56cff;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-    color: #fff;
+    color: var(--text);
     background:
-        radial-gradient(circle at top left, rgba(255, 120, 0, 0.18), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(80, 255, 140, 0.12), transparent 30%),
-        #090909;
+        linear-gradient(135deg, rgba(255, 138, 25, 0.1), transparent 34%),
+        radial-gradient(circle at top left, rgba(255, 120, 0, 0.22), transparent 30%),
+        radial-gradient(circle at right 42%, rgba(76, 255, 117, 0.12), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(165, 108, 255, 0.14), transparent 26%),
+        var(--bg);
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
 }
 
 .app {
     width: 100%;
     min-height: 100vh;
-    padding: 45px 70px;
+    padding: 42px 70px 34px;
 }
 
 .hero {
     text-align: center;
-    margin-bottom: 35px;
+    margin: 0 auto 32px;
+    max-width: 820px;
 }
 
 .icon {
-    font-size: 58px;
-    margin-bottom: 10px;
+    width: 82px;
+    height: 82px;
+    margin: 0 auto 12px;
+    display: grid;
+    place-items: center;
+    font-size: 50px;
+    border-radius: 26px;
+    background: linear-gradient(145deg, rgba(255, 138, 25, 0.28), rgba(76, 255, 117, 0.14));
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.38);
 }
 
 .hero h1 {
@@ -36,13 +72,73 @@ body {
 }
 
 .hero h1 span {
-    color: #ff8a19;
+    color: var(--orange);
 }
 
 .hero p {
-    margin-top: 10px;
-    color: #cfcfcf;
+    margin: 10px 0 0;
+    color: var(--muted);
     font-size: 20px;
+}
+
+.agent-status,
+.mini-steps,
+.quick-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.agent-status {
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.agent-status span,
+.mini-steps span {
+    position: relative;
+    padding: 8px 13px 8px 28px;
+    border-radius: 999px;
+    color: #f3f3f3;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    font-size: 13px;
+}
+
+.agent-status span::before,
+.mini-steps span::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--green);
+    box-shadow: 0 0 12px rgba(76, 255, 117, 0.9);
+    transform: translateY(-50%);
+}
+
+.app[data-estado="escuchando"] .agent-status span:nth-child(1),
+.app[data-estado="pensando"] .agent-status span:nth-child(2),
+.app[data-estado="hablando"] .agent-status span:nth-child(3) {
+    color: #101010;
+    background: var(--gold);
+    border-color: rgba(255, 211, 107, 0.9);
+}
+
+.app[data-estado="escuchando"] .mic-btn {
+    animation: mic-listening 1.2s ease-in-out infinite;
+}
+
+.app[data-estado="pensando"] .box#respuestaIA {
+    border-color: rgba(255, 211, 107, 0.5);
+    box-shadow: inset 0 0 0 1px rgba(255, 211, 107, 0.12);
+}
+
+.app[data-estado="hablando"] .card h2.chef {
+    text-shadow: 0 0 18px rgba(76, 255, 117, 0.55);
 }
 
 .paneles {
@@ -56,11 +152,11 @@ body {
 .voice-card,
 .features,
 .tips {
-    background: rgba(20, 23, 32, 0.82);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(180deg, rgba(31, 35, 48, 0.9), var(--panel));
+    border: 1px solid var(--line);
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(12px);
-    border-radius: 24px;
+    border-radius: 22px;
 }
 
 .card {
@@ -70,20 +166,22 @@ body {
 .card h2 {
     margin: 0 0 20px;
     font-size: 20px;
-    color: #a56cff;
+    color: var(--violet);
 }
 
 .card h2.chef {
-    color: #4cff75;
+    color: var(--green);
 }
 
 .box {
     min-height: 210px;
     padding: 22px;
     border-radius: 18px;
-    background: rgba(8, 10, 16, 0.65);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
+        rgba(8, 10, 16, 0.72);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #d8d8d8;
+    color: #e1e1e1;
     line-height: 1.6;
     white-space: pre-wrap;
     overflow-y: auto;
@@ -91,12 +189,29 @@ body {
 
 .voice-card {
     position: relative;
-    padding: 38px 25px;
+    padding: 38px 25px 30px;
     text-align: center;
     overflow: hidden;
 }
 
+.voice-card::before,
+.voice-card::after {
+    content: "";
+    position: absolute;
+    inset: 24px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 138, 25, 0.16);
+    pointer-events: none;
+}
+
+.voice-card::after {
+    inset: 52px;
+    border-color: rgba(76, 255, 117, 0.12);
+}
+
 .mic-btn {
+    position: relative;
+    z-index: 1;
     width: 180px;
     height: 180px;
     border-radius: 50%;
@@ -104,28 +219,48 @@ body {
     cursor: pointer;
     font-size: 78px;
     color: white;
-    background: linear-gradient(145deg, #ffb12a, #ff5b00);
+    background: linear-gradient(145deg, #ffbf3c, #ff5b00);
     box-shadow:
         0 0 0 16px rgba(255, 138, 25, 0.15),
-        0 0 45px rgba(255, 120, 0, 0.8);
-    transition: 0.25s ease;
+        0 0 45px rgba(255, 120, 0, 0.8),
+        inset 0 -16px 28px rgba(116, 41, 0, 0.24);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .mic-btn:hover {
     transform: scale(1.06);
     box-shadow:
         0 0 0 22px rgba(255, 138, 25, 0.18),
-        0 0 65px rgba(255, 120, 0, 1);
+        0 0 65px rgba(255, 120, 0, 1),
+        inset 0 -16px 28px rgba(116, 41, 0, 0.24);
 }
 
 .voice-card h2 {
+    position: relative;
+    z-index: 1;
     margin: 28px 0 8px;
     font-size: 36px;
 }
 
 .voice-card p {
+    position: relative;
+    z-index: 1;
+    margin: 0;
     color: #d5d5d5;
     font-size: 18px;
+}
+
+.mini-steps {
+    position: relative;
+    z-index: 1;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.mini-steps span {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    font-size: 12px;
 }
 
 .onda {
@@ -134,16 +269,43 @@ body {
     height: 2px;
     background: linear-gradient(90deg,
             transparent,
-            #ff8a19,
+            var(--orange),
             transparent,
-            #ff8a19,
+            var(--green),
+            transparent,
+            var(--orange),
             transparent);
-    opacity: 0.55;
+    opacity: 0.65;
+    animation: pulse-line 2.4s ease-in-out infinite;
+}
+
+.quick-actions {
+    gap: 12px;
+    margin: 28px auto 0;
+    max-width: 980px;
+}
+
+.quick-actions button {
+    min-height: 42px;
+    padding: 10px 16px;
+    border: 1px solid rgba(255, 138, 25, 0.35);
+    border-radius: 999px;
+    color: #fff6e4;
+    background: rgba(255, 138, 25, 0.12);
+    cursor: pointer;
+    font-weight: 700;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.quick-actions button:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 211, 107, 0.72);
+    background: rgba(255, 138, 25, 0.22);
 }
 
 .features {
     width: 78%;
-    margin: 35px auto 18px;
+    margin: 28px auto 18px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     padding: 25px;
@@ -166,7 +328,7 @@ body {
 
 .features p {
     margin: 0;
-    color: #cfcfcf;
+    color: var(--muted);
     line-height: 1.5;
 }
 
@@ -182,16 +344,46 @@ body {
 }
 
 .tips strong {
-    color: #ffd36b;
+    color: var(--gold);
 }
 
 .tips span {
     padding: 8px 14px;
-    color: #ffd36b;
+    color: var(--gold);
     background: rgba(255, 138, 25, 0.12);
     border: 1px solid rgba(255, 138, 25, 0.35);
     border-radius: 999px;
     font-size: 14px;
+}
+
+@keyframes pulse-line {
+    0%,
+    100% {
+        opacity: 0.35;
+        transform: scaleX(0.82);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scaleX(1);
+    }
+}
+
+@keyframes mic-listening {
+    0%,
+    100% {
+        box-shadow:
+            0 0 0 16px rgba(255, 138, 25, 0.15),
+            0 0 45px rgba(255, 120, 0, 0.8),
+            inset 0 -16px 28px rgba(116, 41, 0, 0.24);
+    }
+
+    50% {
+        box-shadow:
+            0 0 0 26px rgba(76, 255, 117, 0.13),
+            0 0 70px rgba(76, 255, 117, 0.5),
+            inset 0 -16px 28px rgba(116, 41, 0, 0.24);
+    }
 }
 
 @media (max-width: 1000px) {
@@ -214,8 +406,22 @@ body {
 }
 
 @media (max-width: 600px) {
+    .app {
+        padding: 24px 14px;
+    }
+
     .hero h1 {
         font-size: 38px;
+    }
+
+    .hero p {
+        font-size: 17px;
+    }
+
+    .mic-btn {
+        width: 150px;
+        height: 150px;
+        font-size: 64px;
     }
 
     .features {
@@ -224,5 +430,10 @@ body {
 
     .features div {
         border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .features div:last-child {
+        border-bottom: none;
     }
 }
