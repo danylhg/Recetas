@@ -1,4 +1,5 @@
 const btn = document.getElementById("btnHablar");
+const btnPausar = document.getElementById("btnPausar");
 const textoUsuario = document.getElementById("textoUsuario");
 const respuestaIA = document.getElementById("respuestaIA");
 const app = document.querySelector(".app");
@@ -29,6 +30,37 @@ function setEstado(estado) {
   app.dataset.estado = estado;
 }
 
+function detenerAudio() {
+  if (!audioActual) return;
+
+  const audio = audioActual;
+  audioActual.pause();
+  audioActual.currentTime = 0;
+  audioActual = null;
+
+  if (typeof audio.onended === "function") {
+    audio.onended();
+  }
+}
+
+function pausarConversacion() {
+  conversacionActiva = false;
+  escuchando = false;
+  hablando = false;
+  detenerAudio();
+
+  if (recognition) {
+    try {
+      recognition.stop();
+    } catch {
+      // El navegador puede lanzar error si ya estaba detenida.
+    }
+  }
+
+  setEstado("pausado");
+  textoUsuario.textContent = "Escucha pausada.";
+}
+
 btn.addEventListener("click", async () => {
   if (!recognition) return;
 
@@ -41,6 +73,8 @@ btn.addEventListener("click", async () => {
   iniciarEscucha();
 });
 
+btnPausar.addEventListener("click", pausarConversacion);
+
 function iniciarEscucha() {
   if (!recognition || hablando || escuchando || !conversacionActiva) return;
 
@@ -51,7 +85,10 @@ function iniciarEscucha() {
     recognition.start();
   } catch {
     escuchando = false;
-    setTimeout(iniciarEscucha, 800);
+
+    if (conversacionActiva) {
+      setTimeout(iniciarEscucha, 800);
+    }
   }
 }
 
@@ -70,7 +107,10 @@ if (recognition) {
     escuchando = false;
     setEstado("listo");
     textoUsuario.textContent = "No se entendió tu voz.";
-    setTimeout(iniciarEscucha, 1000);
+
+    if (conversacionActiva) {
+      setTimeout(iniciarEscucha, 1000);
+    }
   };
 
   recognition.onend = () => {
@@ -115,7 +155,7 @@ async function conversar(texto) {
 }
 
 async function enviarTexto(texto) {
-  conversacionActiva = false;
+  pausarConversacion();
   textoUsuario.textContent = texto;
   await conversar(texto);
 }
@@ -125,11 +165,7 @@ async function hablar(texto) {
     try {
       hablando = true;
 
-      if (audioActual) {
-        audioActual.pause();
-        audioActual.currentTime = 0;
-        audioActual = null;
-      }
+      detenerAudio();
 
       const res = await fetch(API_VOZ, {
         method: "POST",

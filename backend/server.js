@@ -35,6 +35,31 @@ const ai = new GoogleGenAI({
 
 let historial = [];
 
+async function generarRespuesta(prompt) {
+  const modelos = [
+    process.env.GEMINI_MODEL || "gemini-2.5-flash-lite",
+    process.env.GEMINI_FALLBACK_MODEL || "gemini-3.1-flash-lite",
+  ].filter((modelo, index, lista) => modelo && lista.indexOf(modelo) === index);
+
+  let ultimoError = null;
+
+  for (const model of modelos) {
+    try {
+      const response = await ai.models.generateContent({
+        model,
+        contents: prompt,
+      });
+
+      return response.text;
+    } catch (error) {
+      ultimoError = error;
+      console.error(`Problema al responder con ${model}:`, error.message);
+    }
+  }
+
+  throw ultimoError;
+}
+
 app.post("/api/chefia", async (req, res) => {
   try {
     const { mensaje } = req.body;
@@ -62,18 +87,13 @@ Conversación:
 ${historial.join("\n")}
 `;
 
-    const response = await ai.models.generateContent({
-      model: process.env.GEMINI_MODEL || "gemini-2.5-flash-lite",
-      contents: prompt,
-    });
-
-    const respuesta = response.text;
+    const respuesta = await generarRespuesta(prompt);
 
     historial.push(`Asistente: ${respuesta}`);
 
     res.json({ respuesta });
   } catch (error) {
-    console.error("Problema al responder:", error.message);
+    console.error("Problema al responder:", error?.message || error);
 
     res.json({
       respuesta: "Tengo un problema en este momento. Intenta de nuevo en unos minutos.",
