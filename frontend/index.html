@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChefIA Voz</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <main class="app">
+        <section class="hero">
+            <div class="icon">👨‍🍳</div>
+            <h1>ChefIA <span>Voz</span></h1>
+            <p>Tu asistente inteligente de recetas por voz</p>
+        </section>
+
+        <section class="paneles">
+            <div class="card">
+                <h2>💬 Tú dijiste:</h2>
+                <div class="box" id="textoUsuario">
+                    Aquí aparecerá lo que digas...
+                </div>
+            </div>
+
+            <div class="voice-card">
+                <div class="onda"></div>
+                <button id="btnHablar" class="mic-btn">🎙️</button>
+                <h2>Hablar</h2>
+                <p>Presiona y pide una receta</p>
+            </div>
+
+            <div class="card">
+                <h2 class="chef">👨‍🍳 ChefIA:</h2>
+                <div class="box" id="respuestaIA">
+                    La receta aparecerá aquí...
+                </div>
+            </div>
+        </section>
+
+        <section class="quick-actions">
+            <button onclick="enviarTexto('Dame una receta mexicana económica')">Mexicana</button>
+            <button onclick="enviarTexto('Dame una receta saludable para cenar')">Saludable</button>
+            <button onclick="enviarTexto('Dame un postre fácil sin horno')">Postre sin horno</button>
+            <button onclick="enviarTexto('Dame una receta con pollo')">Pollo</button>
+            <button onclick="enviarTexto('Dame una receta vegana fácil')">Vegana</button>
+            <button onclick="enviarTexto('Dame una receta rápida para cenar')">Rápida</button>
+        </section>
+
+        <section class="features">
+            <div>
+                <h3>⏱️ Rápido</h3>
+                <p>Recetas listas en minutos</p>
+            </div>
+
+            <div>
+                <h3>🌿 Personalizado</h3>
+                <p>Según tus ingredientes</p>
+            </div>
+
+            <div>
+                <h3>👥 Para todos</h3>
+                <p>Recetas para 1, 2 o más personas</p>
+            </div>
+
+            <div>
+                <h3>❤️ Saludable</h3>
+                <p>Opciones balanceadas</p>
+            </div>
+        </section>
+
+        <section class="tips">
+            <strong>Tips:</strong>
+            <span>“Quiero una receta con pollo”</span>
+            <span>“Algo sin horno”</span>
+            <span>“Receta rápida para cenar”</span>
+            <span>“Receta vegana”</span>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
