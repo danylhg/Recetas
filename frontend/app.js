@@ -95,7 +95,7 @@ async function conversar(texto) {
 
     if (!res.ok || data.error) {
       setEstado("listo");
-      respuestaIA.textContent = data.error || "Error al consultar ChefIA.";
+      respuestaIA.textContent = data.error || "Tengo un problema en este momento.";
       await hablar("Tuve un problema para responder.");
       iniciarEscucha();
       return;
@@ -110,7 +110,7 @@ async function conversar(texto) {
   } catch (error) {
     console.error("ERROR CHAT:", error);
     setEstado("listo");
-    respuestaIA.textContent = "No se pudo conectar con el servidor.";
+    respuestaIA.textContent = "Tengo un problema en este momento.";
   }
 }
 

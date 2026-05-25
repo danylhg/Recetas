@@ -69,15 +69,14 @@ ${historial.join("\n")}
 
     const respuesta = response.text;
 
-    historial.push(`ChefIA: ${respuesta}`);
+    historial.push(`Asistente: ${respuesta}`);
 
     res.json({ respuesta });
   } catch (error) {
-    console.error("ERROR GEMINI:", error.message);
+    console.error("Problema al responder:", error.message);
 
     res.json({
-      respuesta:
-        "Tuve un problema con la IA. Podemos seguir con una receta sencilla. ¿Quieres pasta, huevo o pollo?",
+      respuesta: "Tengo un problema en este momento. Intenta de nuevo en unos minutos.",
     });
   }
 });
@@ -119,10 +118,10 @@ app.post("/api/voz", async (req, res) => {
     );
 
     if (response.status !== 200) {
-      console.error("ERROR INWORLD REAL:", response.data);
+      console.error("Problema al generar voz:", response.data);
 
       return res.status(500).json({
-        error: "No se pudo generar la voz con Inworld.",
+        error: "No se pudo generar la voz.",
       });
     }
 
@@ -131,10 +130,10 @@ app.post("/api/voz", async (req, res) => {
     res.setHeader("Content-Type", "audio/mpeg");
     res.send(audioBuffer);
   } catch (error) {
-    console.error("ERROR INWORLD:", error.message);
+    console.error("Problema al generar voz:", error.message);
 
     res.status(500).json({
-      error: "Error al generar voz con Inworld.",
+      error: "Error al generar voz.",
     });
   }
 });
